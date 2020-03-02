@@ -4,7 +4,6 @@ import com.example.todosdemobackend.entity.Todo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -19,77 +18,55 @@ public class MongoService {
         System.getenv("MONGO_PW"),
         System.getenv("MONGO_URL")
     ));
+    private static MongoCollection<Document> collection = new MongoClient((mongoConnectionString))
+            .getDatabase("todos-demo")
+            .getCollection("todo");
 
     public static Todo getTodo(String id) {
-        try(MongoClient mongoClient = new MongoClient((mongoConnectionString))) {
-            MongoDatabase database = mongoClient.getDatabase("todos-demo");
-            MongoCollection<Document> collection = database.getCollection("todo");
+        Document query = new Document("_id", new ObjectId(id));
+        Document doc = collection.find(query).iterator().next();
 
-            Document query = new Document("_id", new ObjectId(id));
-            Document doc = collection.find(query).iterator().next();
-
-            return new Todo(
-                    doc.getObjectId("_id").toString(),
-                    doc.getString("text")
-            );
-        }
+        return new Todo(
+                doc.getObjectId("_id").toString(),
+                doc.getString("text")
+        );
     }
 
     public static List<Todo> getTodos() {
-        try(MongoClient mongoClient = new MongoClient((mongoConnectionString))) {
-            MongoDatabase database = mongoClient.getDatabase("todos-demo");
-            MongoCollection<Document> collection = database.getCollection("todo");
+        List<Todo> todos = new ArrayList<Todo>();
 
-            List<Todo> todos = new ArrayList<Todo>();
-
-            for (Document doc : collection.find()) {
-                todos.add(new Todo(
-                        doc.getObjectId("_id").toString(),
-                        doc.getString("text"))
-                );
-            }
-
-            return todos;
+        for (Document doc : collection.find()) {
+            todos.add(new Todo(
+                    doc.getObjectId("_id").toString(),
+                    doc.getString("text"))
+            );
         }
+
+        return todos;
     }
 
     public static Todo putTodo(Todo todo) {
-        try(MongoClient mongoClient = new MongoClient((mongoConnectionString))) {
-            MongoDatabase database = mongoClient.getDatabase("todos-demo");
-            MongoCollection<Document> collection = database.getCollection("todo");
+        Document doc = new Document();
+        doc.put("text", todo.getText());
+        collection.insertOne(doc);
+        todo.setId(doc.get( "_id" ).toString());
 
-            Document doc = new Document();
-            doc.put("text", todo.getText());
-            collection.insertOne(doc);
-            todo.setId(doc.get( "_id" ).toString());
-
-            return todo;
-        }
+        return todo;
     }
 
     public static List<Todo> deleteTodo(Todo todo) {
-        try(MongoClient mongoClient = new MongoClient((mongoConnectionString))) {
-            MongoDatabase database = mongoClient.getDatabase("todos-demo");
-            MongoCollection<Document> collection = database.getCollection("todo");
+        collection.deleteOne(new Document("_id", new ObjectId(todo.getId())));
 
-            collection.deleteOne(new Document("_id", new ObjectId(todo.getId())));
-
-            return MongoService.getTodos();
-        }
+        return MongoService.getTodos();
     }
 
     public static Todo updateTodo(Todo todo) {
-        try(MongoClient mongoClient = new MongoClient((mongoConnectionString))) {
-            MongoDatabase database = mongoClient.getDatabase("todos-demo");
-            MongoCollection<Document> collection = database.getCollection("todo");
+        Bson filter = new Document("_id", new ObjectId(todo.getId()));
+        Bson newValue = new Document("text", todo.getText());
+        Bson updateOperationDocument = new Document("$set", newValue);
 
-            Bson filter = new Document("_id", new ObjectId(todo.getId()));
-            Bson newValue = new Document("text", todo.getText());
-            Bson updateOperationDocument = new Document("$set", newValue);
+        collection.updateOne(filter, updateOperationDocument);
 
-            collection.updateOne(filter, updateOperationDocument);
-
-            return MongoService.getTodo(todo.getId());
-        }
+        return MongoService.getTodo(todo.getId());
     }
 }
