@@ -6,6 +6,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -74,6 +75,21 @@ public class MongoService {
             collection.deleteOne(new Document("_id", new ObjectId(todo.getId())));
 
             return MongoService.getTodos();
+        }
+    }
+
+    public static Todo updateTodo(Todo todo) {
+        try(MongoClient mongoClient = new MongoClient((mongoConnectionString))) {
+            MongoDatabase database = mongoClient.getDatabase("todos-demo");
+            MongoCollection<Document> collection = database.getCollection("todo");
+
+            Bson filter = new Document("_id", new ObjectId(todo.getId()));
+            Bson newValue = new Document("text", todo.getText());
+            Bson updateOperationDocument = new Document("$set", newValue);
+
+            collection.updateOne(filter, updateOperationDocument);
+
+            return MongoService.getTodo(todo.getId());
         }
     }
 }

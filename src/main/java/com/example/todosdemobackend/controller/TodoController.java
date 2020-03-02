@@ -22,4 +22,7 @@ public class TodoController {
     @DeleteMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Todo> deleteTodo(@RequestBody Todo todo) { return MongoService.deleteTodo(todo); }
 
+    @PostMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Todo updateTodo(@RequestBody Todo todo) { return MongoService.updateTodo(todo); }
+
 }
