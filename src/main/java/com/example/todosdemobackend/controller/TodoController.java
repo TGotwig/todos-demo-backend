@@ -16,4 +16,7 @@ public class TodoController {
     @GetMapping(path = "/todos", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Todo> getTodos() { return MongoService.getTodos(); }
 
+    @PutMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Todo putTodo(@RequestBody Todo todo) { return MongoService.putTodo(todo); }
+
 }

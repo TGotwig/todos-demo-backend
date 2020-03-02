@@ -51,4 +51,18 @@ public class MongoService {
             return todos;
         }
     }
+
+    public static Todo putTodo(Todo todo) {
+        try(MongoClient mongoClient = new MongoClient((mongoConnectionString))) {
+            MongoDatabase database = mongoClient.getDatabase("todos-demo");
+            MongoCollection<Document> collection = database.getCollection("todo");
+
+            Document doc = new Document();
+            doc.put("text", todo.getText());
+            collection.insertOne(doc);
+            todo.setId(doc.get( "_id" ).toString());
+
+            return todo;
+        }
+    }
 }
