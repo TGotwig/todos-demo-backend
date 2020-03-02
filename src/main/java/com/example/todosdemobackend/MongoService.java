@@ -65,4 +65,15 @@ public class MongoService {
             return todo;
         }
     }
+
+    public static List<Todo> deleteTodo(Todo todo) {
+        try(MongoClient mongoClient = new MongoClient((mongoConnectionString))) {
+            MongoDatabase database = mongoClient.getDatabase("todos-demo");
+            MongoCollection<Document> collection = database.getCollection("todo");
+
+            collection.deleteOne(new Document("_id", new ObjectId(todo.getId())));
+
+            return MongoService.getTodos();
+        }
+    }
 }
