@@ -54,8 +54,8 @@ public class MongoService {
         return todo;
     }
 
-    public static List<Todo> deleteTodo(Todo todo) {
-        collection.deleteOne(new Document("_id", new ObjectId(todo.getId())));
+    public static List<Todo> deleteTodo(String id) {
+        collection.deleteOne(new Document("_id", new ObjectId(id)));
 
         return MongoService.getTodos();
     }

@@ -23,8 +23,8 @@ public class TodoController implements WebMvcConfigurer {
     @PutMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
     public Todo putTodo(@RequestBody Todo todo) { return MongoService.putTodo(todo); }
 
-    @DeleteMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Todo> deleteTodo(@RequestBody Todo todo) { return MongoService.deleteTodo(todo); }
+    @DeleteMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Todo> deleteTodo(@PathVariable String id) { return MongoService.deleteTodo(id); }
 
     @PostMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
     public Todo updateTodo(@RequestBody Todo todo) { return MongoService.updateTodo(todo); }
