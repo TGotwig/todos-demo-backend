@@ -26,8 +26,12 @@ public class TodoController implements WebMvcConfigurer {
     @DeleteMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Todo> deleteTodo(@PathVariable String id) { return MongoService.deleteTodo(id); }
 
-    @PostMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Todo updateTodo(@RequestBody Todo todo) { return MongoService.updateTodo(todo); }
+    @PostMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Todo updateTodo(@RequestBody Todo todo, @PathVariable String id) {
+        todo.setId(id);
+        System.out.println(todo);
+        return MongoService.updateTodo(todo);
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
