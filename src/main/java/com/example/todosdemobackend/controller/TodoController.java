@@ -2,13 +2,17 @@ package com.example.todosdemobackend.controller;
 
 import com.example.todosdemobackend.MongoService;
 import com.example.todosdemobackend.entity.Todo;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+@Configuration
 @RestController
-public class TodoController {
+public class TodoController implements WebMvcConfigurer {
 
     @GetMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Todo getTodo(@PathVariable String id) { return MongoService.getTodo(id); }
@@ -24,5 +28,11 @@ public class TodoController {
 
     @PostMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
     public Todo updateTodo(@RequestBody Todo todo) { return MongoService.updateTodo(todo); }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("*");
+    }
 
 }
