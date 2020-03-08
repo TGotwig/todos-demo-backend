@@ -12,6 +12,7 @@ import java.util.List;
 
 @Configuration
 @RestController
+@RequestMapping("/api")
 public class TodoController implements WebMvcConfigurer {
 
     @GetMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
