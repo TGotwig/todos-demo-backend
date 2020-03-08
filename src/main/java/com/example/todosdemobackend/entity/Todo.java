@@ -1,12 +1,16 @@
 package com.example.todosdemobackend.entity;
 
-public class Todo {
+public class Todo extends TodoContent {
     private String id;
-    private String text;
 
     public Todo(String id, String text) {
+        super(text);
         this.id = id;
-        this.text = text;
+    }
+
+    public Todo(String id, TodoContent todo) {
+        super(todo.getText());
+        this.id = id;
     }
 
     public String getId() {
@@ -17,19 +21,4 @@ public class Todo {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    @Override
-    public String toString() {
-        return "Todo{" +
-                "id='" + id + '\'' +
-                ", text='" + text + '\'' +
-                '}';
-    }
 }

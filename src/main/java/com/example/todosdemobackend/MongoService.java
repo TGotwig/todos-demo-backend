@@ -1,6 +1,7 @@
 package com.example.todosdemobackend;
 
 import com.example.todosdemobackend.entity.Todo;
+import com.example.todosdemobackend.entity.TodoContent;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
@@ -45,11 +46,12 @@ public class MongoService {
         return todos;
     }
 
-    public static Todo putTodo(Todo todo) {
+    public static Todo putTodo(TodoContent todoContent) {
         Document doc = new Document();
-        doc.put("text", todo.getText());
+        doc.put("text", todoContent.getText());
         collection.insertOne(doc);
-        todo.setId(doc.get( "_id" ).toString());
+
+        Todo todo = new Todo(doc.get( "_id" ).toString(), todoContent.getText());
 
         return todo;
     }

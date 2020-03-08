@@ -2,6 +2,7 @@ package com.example.todosdemobackend.controller;
 
 import com.example.todosdemobackend.MongoService;
 import com.example.todosdemobackend.entity.Todo;
+import com.example.todosdemobackend.entity.TodoContent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +17,28 @@ import java.util.List;
 public class TodoController implements WebMvcConfigurer {
 
     @GetMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Todo getTodo(@PathVariable String id) { return MongoService.getTodo(id); }
+    public Todo getTodo(@PathVariable String id) {
+        return MongoService.getTodo(id);
+    }
 
     @GetMapping(path = "/todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Todo> getTodos() { return MongoService.getTodos(); }
+    public List<Todo> getTodos() {
+        return MongoService.getTodos();
+    }
 
     @PutMapping(path = "/todo", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Todo putTodo(@RequestBody Todo todo) { return MongoService.putTodo(todo); }
+    public Todo putTodo(@RequestBody TodoContent todo) {
+        return MongoService.putTodo(todo);
+    }
 
     @DeleteMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Todo> deleteTodo(@PathVariable String id) { return MongoService.deleteTodo(id); }
+    public List<Todo> deleteTodo(@PathVariable String id) {
+        return MongoService.deleteTodo(id);
+    }
 
     @PostMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Todo updateTodo(@RequestBody Todo todo, @PathVariable String id) {
-        todo.setId(id);
-        System.out.println(todo);
-        return MongoService.updateTodo(todo);
+    public Todo updateTodo(@RequestBody TodoContent todo, @PathVariable String id) {
+        return MongoService.updateTodo(new Todo(id, todo));
     }
 
     @Override
