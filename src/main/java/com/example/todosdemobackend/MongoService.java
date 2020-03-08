@@ -13,12 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MongoService {
-    private static MongoClientURI mongoConnectionString = new MongoClientURI(String.format(
-        "mongodb+srv://%s:%s@%s",
-        System.getenv("MONGO_USER"),
-        System.getenv("MONGO_PW"),
-        System.getenv("MONGO_URL")
-    ));
+    private static MongoClientURI mongoConnectionString = new MongoClientURI(System.getenv("MONGO"));
     private static MongoCollection<Document> collection = new MongoClient((mongoConnectionString))
             .getDatabase("todos-demo")
             .getCollection("todo");
