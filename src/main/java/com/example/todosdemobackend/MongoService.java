@@ -59,10 +59,12 @@ public class MongoService {
 
     public static Todo updateTodo(Todo todo) {
         Bson filter = new Document("_id", new ObjectId(todo.getId()));
-        Bson newValue = new Document("text", todo.getText());
-        Bson updateOperationDocument = new Document("$set", newValue);
 
-        collection.updateOne(filter, updateOperationDocument);
+        if (todo.getText() != null) {
+            collection.updateOne(filter, new Document("$set",
+                    new Document("text", todo.getText())
+            ));
+        }
 
         return MongoService.getTodo(todo.getId());
     }
