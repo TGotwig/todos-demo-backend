@@ -42,6 +42,10 @@ public class MongoService {
     }
 
     public static Todo putTodo(TodoContent todoContent) {
+        if (todoContent.getText() == null) {
+            throw new NullPointerException("The following field is required: text");
+        }
+
         Document doc = new Document();
         doc.put("text", todoContent.getText());
         collection.insertOne(doc);
