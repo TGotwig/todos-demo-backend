@@ -61,6 +61,12 @@ public class MongoService {
         return MongoService.getTodos();
     }
 
+    public static List<Todo> deleteTodos() {
+        collection.drop();
+
+        return MongoService.getTodos();
+    }
+
     public static Todo updateTodo(Todo todo) {
         Bson filter = new Document("_id", new ObjectId(todo.getId()));
 

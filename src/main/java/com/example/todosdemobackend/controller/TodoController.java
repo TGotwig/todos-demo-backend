@@ -36,6 +36,11 @@ public class TodoController implements WebMvcConfigurer {
         return MongoService.deleteTodo(id);
     }
 
+    @DeleteMapping(path = "/todos", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Todo> deleteTodos() {
+        return MongoService.deleteTodos();
+    }
+
     @PostMapping(path = "/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Todo updateTodo(@RequestBody TodoContent todo, @PathVariable String id) {
         return MongoService.updateTodo(new Todo(id, todo));
