@@ -29,7 +29,7 @@ public class MongoService {
     }
 
     public static List<Todo> getTodos() {
-        List<Todo> todos = new ArrayList<Todo>();
+        List<Todo> todos = new ArrayList<>();
 
         for (Document doc : collection.find()) {
             todos.add(new Todo(
@@ -46,13 +46,10 @@ public class MongoService {
             throw new NullPointerException("The following field is required: text");
         }
 
-        Document doc = new Document();
-        doc.put("text", todoContent.getText());
+        Document doc = new Document("text", todoContent.getText());
         collection.insertOne(doc);
 
-        Todo todo = new Todo(doc.get( "_id" ).toString(), todoContent.getText());
-
-        return todo;
+        return new Todo(doc.get( "_id" ).toString(), todoContent.getText());
     }
 
     public static List<Todo> deleteTodo(String id) {
